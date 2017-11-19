@@ -1,6 +1,6 @@
 # miNEMcraft
-a plugin for bukkit/spigot
-there are no new things
+A plugin for bukkit/spigot.
+There are no new things.
 
 ## 進捗
 なにも完成していない
