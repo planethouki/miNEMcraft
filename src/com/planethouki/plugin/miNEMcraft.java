@@ -14,7 +14,7 @@ public class miNEMcraft extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		// TODO Auto-generated method stub
-		getCommand("balance").setExecutor(new balanceCommand());
+		getCommand("nemc").setExecutor(new testCommand());
 		super.onEnable();
 	}
 
