@@ -39,6 +39,7 @@ public class TestCommand implements CommandExecutor {
 			break;
 		case "tip":
 			url = "TCNO3A-YQ2CNE-Z66G5T-L57356-J2HWJF-G3IP64-6H4N";
+			//TODO とりあえず送金するトランザクションを投げる
 			break;
 		default:
 			break;

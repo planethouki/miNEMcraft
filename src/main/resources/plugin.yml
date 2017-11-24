@@ -1,6 +1,6 @@
 name: miNEMcraft
 version: 1.0.0
-main: com.planethouki.plugin.miNEMcraft
+main: com.planethouki.plugin.MinemcraftPlugin
 author: planethouki
 commands:
   nemc:
