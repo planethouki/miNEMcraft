@@ -11,6 +11,12 @@ There are no new things.
 * アポスティーユ 飼いならしたモブの所有権を証明する
 
 ## アーキテクチャ的な
-* 同じサーバー上でspigotとNIS(testnet)を動かす
+* testnet
+* 同じサーバー上でspigotとNISを動かす
 * やりとりは全てチェーンに乗せる
 * 与えられるXEMはすべて鯖主が用意する
+
+## コマンド
+* /balance 残高を確認する
+* /resister <Address> アドレスを登録する（上書き）
+* /generate アドレスを生成する。

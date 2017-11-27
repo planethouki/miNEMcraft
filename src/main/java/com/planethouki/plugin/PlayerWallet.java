@@ -1,13 +1,21 @@
 package com.planethouki.plugin;
 
+import org.bukkit.entity.Player;
+
 public class PlayerWallet {
-	// TODO load configuration file
 	
-	// TODO save configuration file
+	MinemcraftPlugin plugin;
 	
-	// TODO generate wallet
+	public PlayerWallet(MinemcraftPlugin plugin) {
+		this.plugin = plugin;
+	}
 	
-	// TODO return player's wallet
-	
+	public String getAddress(Player player) {
+		// TODO find player name from configuration file
+		
+		// TODO if can't find, generate wallet & save configuration
+		
+		return "TCNO3AYQ2CNEZ66G5TL57356J2HWJFG3IP646H4N"; // test
+	}
 	
 }

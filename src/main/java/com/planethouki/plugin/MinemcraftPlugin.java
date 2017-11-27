@@ -4,6 +4,8 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class MinemcraftPlugin extends JavaPlugin {
+	
+	private PlayerWallet wallet;
 
 	@Override
 	public void onDisable() {
@@ -34,12 +36,16 @@ public class MinemcraftPlugin extends JavaPlugin {
 		
 		// Configurations
 		this.getConfig();
-		new PlayerWallet();
 		
 		// Others
+		wallet = new PlayerWallet(this);
 		getLogger().info("Plugin Enabled");
 		
 		super.onEnable();
+	}
+	
+	public PlayerWallet getPlayerWalletInstance() {
+		return wallet;
 	}
 
 }
