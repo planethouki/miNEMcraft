@@ -17,5 +17,12 @@ public class HarvestListener implements Listener {
 	public void	wheatBreak(BlockBreakEvent event) {
 		this.plugin.getLogger().info(event.getPlayer().getName());
 		this.plugin.getLogger().info(event.getBlock().getType().name());
+		// TODO wheat block detection
+		
+		// TODO transaction
+		// TODO get player's wallet
+		
+		// TODO message
+		
 	}
 }

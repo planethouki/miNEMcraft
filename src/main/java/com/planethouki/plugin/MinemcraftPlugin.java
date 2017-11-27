@@ -7,8 +7,18 @@ public class MinemcraftPlugin extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
+		
+		// Commands
+		
+		// Listeners
 		HandlerList.unregisterAll(this);
+
+		// Configurations
+		this.saveDefaultConfig();
+		
+		// Others
 		getLogger().info("Plugin Disabled");
+		
 		super.onDisable();
 	}
 
@@ -22,7 +32,11 @@ public class MinemcraftPlugin extends JavaPlugin {
 		new LoginListener(this);
 		new HarvestListener(this);
 		
-		// Other
+		// Configurations
+		this.getConfig();
+		new PlayerWallet();
+		
+		// Others
 		getLogger().info("Plugin Enabled");
 		
 		super.onEnable();
