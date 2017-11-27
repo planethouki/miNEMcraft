@@ -17,6 +17,6 @@ There are no new things.
 * 与えられるXEMはすべて鯖主が用意する
 
 ## コマンド
-* /balance 残高を確認する
-* /resister <Address> アドレスを登録する（上書き）
-* /generate アドレスを生成する。
+* /mnc balance 残高を確認する
+* /mnc resister <Address> アドレスを登録する（上書き）
+* /mnc generate アドレスを生成する。

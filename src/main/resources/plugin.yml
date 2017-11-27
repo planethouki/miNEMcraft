@@ -3,7 +3,7 @@ version: 1.0.0
 main: com.planethouki.plugin.MinemcraftPlugin
 author: planethouki
 commands:
-  nemc:
-    description: aaaaa
+  mnc:
+    description: todo
     usage: /<command>
     default: true
