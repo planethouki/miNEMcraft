@@ -10,7 +10,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class MinemcraftPlugin extends JavaPlugin {
 	
-	private PlayerWallet wallet;
 	private FileConfiguration addressConfig;
 	
 	public MinemcraftPlugin() {
@@ -50,7 +49,6 @@ public class MinemcraftPlugin extends JavaPlugin {
 		getCommand("mnc").setExecutor(new MinemcraftCommand(this));
 		
 		// Listeners
-		new LoginListener(this);
 		new HarvestListener(this);
 		
 		// Configurations
@@ -58,15 +56,11 @@ public class MinemcraftPlugin extends JavaPlugin {
 		
 		
 		// Others
-		wallet = new PlayerWallet(this);
 		getLogger().info("Plugin Enabled");
 		
 		super.onEnable();
 	}
 	
-	public PlayerWallet getPlayerWalletInstance() {
-		return wallet;
-	}
 	
 	public FileConfiguration getAddressConfig() {
 		return this.addressConfig;
