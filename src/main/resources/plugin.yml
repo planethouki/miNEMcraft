@@ -9,5 +9,5 @@ commands:
       - /<command> balance
       - /<command> register
     default: true
-  mncd:
-    description: debug command
+  mncx:
+    description: test command

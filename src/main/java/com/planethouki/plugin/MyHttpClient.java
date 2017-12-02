@@ -1,41 +1,83 @@
 package com.planethouki.plugin;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 
 public class MyHttpClient {
     public static String executeGet(String argurl) {
-    	// TODO Coding
-    	URL url;
-    	HttpURLConnection con;
-    	StringBuilder builder = new StringBuilder();;
+    	String rawResponse = "";
+    	String line;
     	try {
-			url = new URL(argurl);
-			con = (HttpURLConnection) url.openConnection();
+			URL url = new URL(argurl);
+			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			con.setRequestMethod("GET");
 			con.connect();
-	    	String line;
-			BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-			while ((line = reader.readLine()) != null) {
-				builder.append(line);
+	    	StringBuilder builder = new StringBuilder();
+			if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
+				BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+				while ((line = reader.readLine()) != null) {
+					builder.append(line);
+				}
+				reader.close();
+			} else {
+				BufferedReader reader = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+				while ((line = reader.readLine()) != null) {
+					builder.append(line);
+				}
+				reader.close();
 			}
-			reader.close();
 			con.disconnect();
+			rawResponse = builder.toString();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-    	//String rawResponse = "{\"code\":6,\"type\":4,\"message\":\"status\"}";
-		return builder.toString();
+		return rawResponse;
     }
 
     public static String executePost(String argurl, String argpost) {
-    	// TODO Coding
-    	String rawResponse = "{\"timeStamp\":84375275,\"error\":\"Not Found\",\"message\":null,\"status\":404}";
+    	String rawResponse = "";
+
+    	try {
+	    	StringBuilder builder = new StringBuilder();
+	    	String line;
+	    	URL url;
+	    	HttpURLConnection con;
+			url = new URL(argurl);
+			con = (HttpURLConnection) url.openConnection();
+			con.setDoOutput(true);
+			con.setRequestMethod("POST");
+			con.setRequestProperty("Content-Type", "application/json");
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(con.getOutputStream()));
+			writer.write(argpost);
+			writer.flush();
+			writer.close();
+			con.connect();
+			if (con.getResponseCode() == HttpURLConnection.HTTP_OK) {
+				BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+				while ((line = reader.readLine()) != null) {
+					builder.append(line);
+				}
+				reader.close();
+			} else {
+				BufferedReader reader = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+				while ((line = reader.readLine()) != null) {
+					builder.append(line);
+				}
+				reader.close();
+			}
+			con.disconnect();
+    		rawResponse = builder.toString();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    	
+    	
 		return rawResponse;
 
     }

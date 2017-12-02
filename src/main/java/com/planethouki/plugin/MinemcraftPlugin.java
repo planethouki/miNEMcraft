@@ -46,7 +46,7 @@ public class MinemcraftPlugin extends JavaPlugin {
 	public void onEnable() {
 		
 		// Commands
-		getCommand("mncd").setExecutor(new DebugCommand(this));
+		getCommand("mncx").setExecutor(new TestCommand(this));
 		getCommand("mnc").setExecutor(new MinemcraftCommand(this));
 		
 		// Listeners

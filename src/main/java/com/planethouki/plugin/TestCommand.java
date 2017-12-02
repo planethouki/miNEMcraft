@@ -1,6 +1,10 @@
 package com.planethouki.plugin;
 
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -8,11 +12,11 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.ParseException;
 
-public class DebugCommand implements CommandExecutor {
+public class TestCommand implements CommandExecutor {
 	
 	private MinemcraftPlugin plugin;
 	
-	public DebugCommand(MinemcraftPlugin plugin) {
+	public TestCommand(MinemcraftPlugin plugin) {
 		this.plugin = plugin;
 	}
 
@@ -36,23 +40,25 @@ public class DebugCommand implements CommandExecutor {
 			sender.sendMessage(url);
 			sender.sendMessage(MyHttpClient.executeGet(url));
 			break;
+		case "bal2":
+			url = "http://127.0.0.1:7890/something/hoge";
+			sender.sendMessage(url);
+			sender.sendMessage(MyHttpClient.executeGet(url));
+			break;
 		case "send":
 			//TODO とりあえず送金するトランザクションを投げる
-			String timeStamp = "83680000";
-			String amount = "10000000";
+			Calendar nemEpoch = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+			nemEpoch.set(2015, 2, 29, 0, 6, 25);
+			Calendar now = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+			
+			String timeStamp = Long.toString((now.getTimeInMillis() - nemEpoch.getTimeInMillis())/1000);
+			String amount = "50000";
 			String fee = "50000";
-			String recipient = plugin.getAddressConfig().getString("planet_houki");
-			String deadline = "83683600";
+			String recipient = plugin.getAddressConfig().getString("planet_houki").replaceAll("-", "");
+			String deadline = Long.toString(((now.getTimeInMillis() - nemEpoch.getTimeInMillis())/1000)+3600);
 			String signer = plugin.getConfig().getString("ServerPublicKey");
 			String privateKey = plugin.getConfig().getString("ServerPrivateKey");
 			url = "http://localhost:7890/transaction/prepare-announce";
-//			data = "{\"transaction\":{\"timeStamp\":" + 
-//					"83680000" + ",\"amount\":" + 
-//					amount + ",\"fee\":50000,\"recipient\":\"" + 
-//					recipient + "\",\"type\":257,\"deadline\":" + 
-//					"83683600" + ",\"message\":{\"payload\":\"\",\"type\":1},\"version\":-1744830463,\"signer\":\"" +
-//					signer + "\"},\"privateKey\":\"" +
-//					privateKey + "\"}";
 			data = String.format("{\"transaction\":{\"timeStamp\":%s,\"amount\":%s,\"fee\":%s,\"recipient\":\"%s\",\"type\":257,\"deadline\":%s,\"message\":{\"payload\":\"\",\"type\":1},\"version\":-1744830463,\"signer\":\"%s\"},\"privateKey\":\"%s\"}",timeStamp, amount, fee, recipient, deadline, signer, privateKey);
 			sender.sendMessage(url);
 			sender.sendMessage(data);
