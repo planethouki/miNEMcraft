@@ -1,11 +1,13 @@
 package com.planethouki.plugin;
 
+import java.util.Collection;
 import java.util.Random;
 
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class HarvestListener implements Listener {
 	
@@ -18,26 +20,30 @@ public class HarvestListener implements Listener {
 	
 	@EventHandler
 	public void	wheatBreak(BlockBreakEvent event) {
-		this.plugin.getLogger().info(event.getPlayer().getName());
-		this.plugin.getLogger().info(event.getBlock().getType().name());
+//		plugin.getLogger().info(event.getPlayer().getName());
+//		plugin.getLogger().info(event.getBlock().getType().name());
 		
 		if (event.getBlock().getType() != Material.CROPS) {
 			return;
 		}
-		
-		// TODO Grown CROPS Only Harvest Chance
-		
-		
-		int harverstRoulette = 0;
-		harverstRoulette += event.getPlayer().getLocation().getX() % 0.1 * 100;
-		harverstRoulette += event.getPlayer().getLocation().getZ() % 0.1 * 100;
-		harverstRoulette %= 10;
 
-		this.plugin.getLogger().info(Integer.toString(Math.abs(harverstRoulette)));
+		Boolean isGrown = false;
+		Collection<ItemStack> drop = event.getBlock().getDrops();
+		for (ItemStack stack: drop) {
+			if (stack.getType() == Material.WHEAT) {
+				isGrown = true;
+			}
+		}
 		
-		if ( Math.abs((int)(harverstRoulette % 0.1 * 100)) < 9) {
+		if (!isGrown) {
 			return;
 		}
+		
+		Random harvestRoulette = new Random();
+		if (harvestRoulette.nextInt(9) != 0) {
+			return;
+		}
+
 		
 		// TODO transaction
 		// TODO get player's wallet
