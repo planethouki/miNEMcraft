@@ -1,11 +1,23 @@
 package com.planethouki.plugin;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class MinemcraftPlugin extends JavaPlugin {
 	
 	private PlayerWallet wallet;
+	private FileConfiguration addressConfig;
+	
+	public MinemcraftPlugin() {
+		super();
+		saveDefaultConfig();
+		saveResource("address.yml", false);
+	}
 
 	@Override
 	public void onDisable() {
@@ -16,7 +28,13 @@ public class MinemcraftPlugin extends JavaPlugin {
 		HandlerList.unregisterAll(this);
 
 		// Configurations
-		this.saveDefaultConfig();
+		saveConfig();
+		try {
+			addressConfig.save("address.yml");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		// Others
 		getLogger().info("Plugin Disabled");
@@ -28,14 +46,16 @@ public class MinemcraftPlugin extends JavaPlugin {
 	public void onEnable() {
 		
 		// Commands
-		getCommand("nemc").setExecutor(new TestCommand());
+		getCommand("mncd").setExecutor(new DebugCommand(this));
+		getCommand("mnc").setExecutor(new MinemcraftCommand(this));
 		
 		// Listeners
 		new LoginListener(this);
 		new HarvestListener(this);
 		
 		// Configurations
-		this.getConfig();
+		addressConfig = YamlConfiguration.loadConfiguration(new File(getDataFolder(), "address.yml"));
+		
 		
 		// Others
 		wallet = new PlayerWallet(this);
@@ -46,6 +66,10 @@ public class MinemcraftPlugin extends JavaPlugin {
 	
 	public PlayerWallet getPlayerWalletInstance() {
 		return wallet;
+	}
+	
+	public FileConfiguration getAddressConfig() {
+		return this.addressConfig;
 	}
 
 }

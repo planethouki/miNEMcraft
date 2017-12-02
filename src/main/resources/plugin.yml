@@ -5,5 +5,9 @@ author: planethouki
 commands:
   mnc:
     description: todo
-    usage: /<command>
+    usage:
+      - /<command> balance
+      - /<command> register
     default: true
+  mncd:
+    description: debug command
