@@ -28,12 +28,7 @@ public class MinemcraftPlugin extends JavaPlugin {
 
 		// Configurations
 		saveConfig();
-		try {
-			addressConfig.save("address.yml");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		saveAddressConfig();
 		
 		// Others
 		getLogger().info("Plugin Disabled");
@@ -64,6 +59,14 @@ public class MinemcraftPlugin extends JavaPlugin {
 	
 	public FileConfiguration getAddressConfig() {
 		return this.addressConfig;
+	}
+	
+	public void saveAddressConfig() {
+		try {
+			addressConfig.save("address.yml");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
