@@ -1,11 +1,10 @@
 # miNEMcraft
 A plugin for bukkit/spigot.
-There are no new things.
 
 [ ![Codeship Status for planethouki/miNEMcraft](https://app.codeship.com/projects/1f434340-b5e4-0135-02bd-0abdbc6c21b9/status?branch=master)](https://app.codeship.com/projects/258518)
 
 ## 進捗
-なにも完成していない
+* ハーベスト、マイニング仮完成
 
 ## やりたいこと
 * ハーベスト 作物を収穫するとXEM（もしくはモザイク）がもらえる
