@@ -45,6 +45,7 @@ public class MinemcraftPlugin extends JavaPlugin {
 		
 		// Listeners
 		new HarvestListener(this);
+		new MineListener(this);
 		
 		// Configurations
 		addressConfig = YamlConfiguration.loadConfiguration(new File(getDataFolder(), "address.yml"));
