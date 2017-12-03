@@ -23,9 +23,15 @@ public class HarvestListener implements Listener {
 	
 	@EventHandler
 	public void	wheatBreak(BlockBreakEvent event) {
-//		plugin.getLogger().info(event.getPlayer().getName());
-//		plugin.getLogger().info(event.getBlock().getType().name());
 		
+		// TODO POTATO
+		// TODO CARROT
+		// TODO BEETROOT
+		// TODO WATERMELON
+		// TODO PUMPKIN
+		// TOOD COCOA
+		// TODO SUGAR CANE
+		// TODO NETHER WART
 		if (event.getBlock().getType() != Material.CROPS) {
 			return;
 		}
@@ -68,10 +74,11 @@ public class HarvestListener implements Listener {
 		String signer = plugin.getConfig().getString("ServerPublicKey");
 		String privateKey = plugin.getConfig().getString("ServerPrivateKey");
 		transactionData = String.format("{\"transaction\":{\"timeStamp\":%s,\"amount\":%s,\"fee\":%s,\"recipient\":\"%s\",\"type\":257,\"deadline\":%s,\"message\":{\"payload\":\"\",\"type\":1},\"version\":-1744830463,\"signer\":\"%s\"},\"privateKey\":\"%s\"}",timeStamp, amount, fee, recipient, deadline, signer, privateKey);
+		plugin.getLogger().info(player.getName() + " has harvested");
 		plugin.getLogger().info(transactionURL);
 		plugin.getLogger().info(transactionData);
 		plugin.getLogger().info(MyHttpClient.executePost(transactionURL, transactionData));
 		
-		event.getPlayer().sendMessage("You Got Harvest!");
+		event.getPlayer().sendMessage("You Got Harvest! " + (Double.parseDouble(amount)/1000) + " XEM");
 	}
 }
