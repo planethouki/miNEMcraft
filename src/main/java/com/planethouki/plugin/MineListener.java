@@ -24,6 +24,13 @@ public class MineListener implements Listener {
 	@EventHandler
 	public void	mineBreak(BlockBreakEvent event) {
 		
+		//TODO IRON
+		//TODO GOLD
+		//TODO LAPIS LAZULI
+		//TODO REDSTONE
+		//TODO EMERALD
+		//TODO DIAMOND
+		
 		if (event.getBlock().getType() != Material.COAL_ORE) {
 			return;
 		}
