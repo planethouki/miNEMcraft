@@ -2,15 +2,11 @@ package com.planethouki.plugin;
 
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.TimeZone;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
-import org.json.simple.parser.ParseException;
 
 public class TestCommand implements CommandExecutor {
 	
@@ -32,12 +28,25 @@ public class TestCommand implements CommandExecutor {
 		String data = "";
 		
 		switch (args[0]) {
+		case "heartbeat":
+		case "hb":
+			url = "http://127.0.0.1:7890/heartbeat";
+			sender.sendMessage(url);
+			sender.sendMessage(MyHttpClient.executeGet(url));
+			break;
+		case "status":
+			url = "http://127.0.0.1:7890/status";
+			sender.sendMessage(url);
+			sender.sendMessage(MyHttpClient.executeGet(url));
+			break;
+		case "serverbalance":
 		case "sbal":
 			String serverAddress = plugin.getConfig().getString("ServerAddress").replaceAll("-", "");
 			url = "http://127.0.0.1:7890/account/get?address=" + serverAddress;
 			sender.sendMessage(url);
 			sender.sendMessage(MyHttpClient.executeGet(url));
 			break;
+		case "balance":
 		case "mybal":
 			String palyerAddress = plugin.getAddressConfig().getString(sender.getName());
 			if (palyerAddress == null) {
