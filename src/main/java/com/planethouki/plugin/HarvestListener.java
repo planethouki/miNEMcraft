@@ -29,7 +29,7 @@ public class HarvestListener implements Listener {
 		// TODO BEETROOT
 		// TODO WATERMELON
 		// TODO PUMPKIN
-		// TOOD COCOA
+		// TODO COCOA
 		// TODO SUGAR CANE
 		// TODO NETHER WART
 		if (event.getBlock().getType() != Material.CROPS) {
