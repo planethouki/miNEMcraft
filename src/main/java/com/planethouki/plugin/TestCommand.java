@@ -39,13 +39,12 @@ public class TestCommand implements CommandExecutor {
 			sender.sendMessage(MyHttpClient.executeGet(url));
 			break;
 		case "mybal":
-			String playerName = sender.getName();
-			if (playerName == null) {
+			String palyerAddress = plugin.getAddressConfig().getString(sender.getName());
+			if (palyerAddress == null) {
 				sender.sendMessage("your address is not registered yet");
 				break;
 			}
-			String palyerAddress = plugin.getAddressConfig().getString(playerName).replaceAll("-", "");
-			url = "http://127.0.0.1:7890/account/get?address=" + palyerAddress;
+			url = "http://127.0.0.1:7890/account/get?address=" + palyerAddress.replaceAll("-", "");
 			sender.sendMessage(url);
 			sender.sendMessage(MyHttpClient.executeGet(url));
 			break;
@@ -63,7 +62,6 @@ public class TestCommand implements CommandExecutor {
 			sender.sendMessage(MyHttpClient.executeGet("http://127.0.0.1:7890/account/generate"));
 			break;
 		case "send":
-			//TODO とりあえず送金するトランザクションを投げる
 			Calendar nemEpoch = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
 			nemEpoch.set(2015, 2, 29, 0, 6, 25);
 			Calendar now = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
