@@ -21,3 +21,16 @@ A plugin for bukkit/spigot.
 * /mnc balance 残高を確認する
 * /mnc resister <Address> アドレスを登録する（上書き）
 * /mnc generate アドレスを生成する。
+
+## いちおう
+### NISあげ
+```
+cd ~
+wget https://bob.nem.ninja/nis-0.6.93.tgz
+tar xzf nis-0.6.93.tgz
+mv package/ nemServer/
+cd nemServer/
+./nix.runNis.sh
+```
+### 疑問
+* ymlに秘密鍵かくと、他pluginからも参照できちゃう？
