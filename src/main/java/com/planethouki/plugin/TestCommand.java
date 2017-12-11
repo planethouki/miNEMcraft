@@ -26,6 +26,7 @@ public class TestCommand implements CommandExecutor {
 		
 		String url = "";
 		String data = "";
+		String recipient = "";
 		
 		switch (args[0]) {
 		case "heartbeat":
@@ -71,6 +72,15 @@ public class TestCommand implements CommandExecutor {
 			sender.sendMessage(MyHttpClient.executeGet("http://127.0.0.1:7890/account/generate"));
 			break;
 		case "send":
+			recipient = plugin.getAddressConfig().getString("planet_houki").replaceAll("-", "");
+			JsonDataBuilder jdBuilder = new JsonDataBuilder(plugin);
+			url = "http://localhost:7890/transaction/prepare-announce";
+			data = jdBuilder.getRequestPrepareAnnounce(recipient, 5000);
+			sender.sendMessage(url);
+			sender.sendMessage(data);
+			sender.sendMessage(MyHttpClient.executePost(url, data));
+			break;
+		case "send2":
 			Calendar nemEpoch = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
 			nemEpoch.set(2015, 2, 29, 0, 6, 25);
 			Calendar now = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
@@ -78,7 +88,7 @@ public class TestCommand implements CommandExecutor {
 			String timeStamp = Long.toString((now.getTimeInMillis() - nemEpoch.getTimeInMillis())/1000);
 			String amount = "50000";
 			String fee = "50000";
-			String recipient = plugin.getAddressConfig().getString("planet_houki").replaceAll("-", "");
+			recipient = plugin.getAddressConfig().getString("planet_houki").replaceAll("-", "");
 			String deadline = Long.toString(((now.getTimeInMillis() - nemEpoch.getTimeInMillis())/1000)+3600);
 			String signer = plugin.getConfig().getString("ServerPublicKey");
 			String privateKey = plugin.getConfig().getString("ServerPrivateKey");
