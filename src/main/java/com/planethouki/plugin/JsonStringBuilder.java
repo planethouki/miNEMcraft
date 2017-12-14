@@ -4,7 +4,7 @@ import java.util.Calendar;
 import java.util.TimeZone;
 
 
-public class JsonDataBuilder {
+public class JsonStringBuilder {
 	
 	private Calendar nemEpoch;
 	private Calendar now;
@@ -17,7 +17,7 @@ public class JsonDataBuilder {
 	private String privateKey;
 	private String data;
 	
-	public JsonDataBuilder(MinemcraftPlugin plugin) {
+	public JsonStringBuilder(MinemcraftPlugin plugin) {
 		nemEpoch = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
 		nemEpoch.set(2015, 2, 29, 0, 6, 25);
 		// now ‚É“ü‚é‚ÍgetInstance‚µ‚½“_‚Ì

@@ -27,6 +27,7 @@ public class TestCommand implements CommandExecutor {
 		String url = "";
 		String data = "";
 		String recipient = "";
+		JsonStringBuilder jdBuilder;
 		
 		switch (args[0]) {
 		case "heartbeat":
@@ -72,15 +73,24 @@ public class TestCommand implements CommandExecutor {
 			sender.sendMessage(MyHttpClient.executeGet("http://127.0.0.1:7890/account/generate"));
 			break;
 		case "send":
-			recipient = plugin.getAddressConfig().getString("planet_houki").replaceAll("-", "");
-			JsonDataBuilder jdBuilder = new JsonDataBuilder(plugin);
+			recipient = plugin.getAddressConfig().getString(sender.getName()).replaceAll("-", "");
+			jdBuilder = new JsonStringBuilder(plugin);
 			url = "http://localhost:7890/transaction/prepare-announce";
 			data = jdBuilder.getRequestPrepareAnnounce(recipient, 5000);
 			sender.sendMessage(url);
 			sender.sendMessage(data);
 			sender.sendMessage(MyHttpClient.executePost(url, data));
 			break;
-		case "send2":
+		case "sendp":
+			recipient = "TCNO3AYQ2CNEZ66G5TL57356J2HWJFG3IP646H4N";
+			jdBuilder = new JsonStringBuilder(plugin);
+			url = "http://localhost:7890/transaction/prepare-announce";
+			data = jdBuilder.getRequestPrepareAnnounce(recipient, 5000);
+			sender.sendMessage(url);
+			sender.sendMessage(data);
+			sender.sendMessage(MyHttpClient.executePost(url, data));
+			break;
+		case "sendp2":
 			Calendar nemEpoch = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
 			nemEpoch.set(2015, 2, 29, 0, 6, 25);
 			Calendar now = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
