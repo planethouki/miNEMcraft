@@ -5,9 +5,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 public class MinemcraftCommand implements CommandExecutor {
-	
+
 	private MinemcraftPlugin plugin;
-	
+
 	public MinemcraftCommand(MinemcraftPlugin plugin) {
 		super();
 		this.plugin = plugin;
@@ -18,15 +18,15 @@ public class MinemcraftCommand implements CommandExecutor {
 		// TODO Auto-generated method stub
 
 		if (args.length == 0) {
-			sender.sendMessage("ˆø”‚ª‘«‚è‚Ü‚¹‚ñI");
-			return false; 
+			sender.sendMessage("å¼•æ•°ãŒè¶³ã‚Šã¾ã›ã‚“ï¼");
+			return false;
 		}
 
 		String url = "";
 		String data = "";
 		String recipient = "";
 		JsonStringBuilder jdBuilder;
-		
+
 
 		switch (args[0]) {
 		case "heartbeat":
@@ -52,8 +52,8 @@ public class MinemcraftCommand implements CommandExecutor {
 			MyHttpClient.executeGet(url);
 			break;
 		}
-		
-		
+
+
 		return false;
 	}
 

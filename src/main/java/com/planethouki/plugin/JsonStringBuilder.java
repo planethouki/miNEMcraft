@@ -5,7 +5,7 @@ import java.util.TimeZone;
 
 
 public class JsonStringBuilder {
-	
+
 	private Calendar nemEpoch;
 	private Calendar now;
 	private long timeStamp;
@@ -16,24 +16,24 @@ public class JsonStringBuilder {
 	private String signer;
 	private String privateKey;
 	private String data;
-	
+
 	public JsonStringBuilder(MinemcraftPlugin plugin) {
 		nemEpoch = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
 		nemEpoch.set(2015, 2, 29, 0, 6, 25);
-		// now ‚É“ü‚é‚ÍgetInstance‚µ‚½“_‚Ì
+		// now ã«å…¥ã‚‹æ™‚åˆ»ã¯getInstanceã—ãŸæ™‚ç‚¹ã®æ™‚åˆ»
 		now = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
 		timeStamp = ((now.getTimeInMillis() - nemEpoch.getTimeInMillis())/1000);
 		deadline = (((now.getTimeInMillis() - nemEpoch.getTimeInMillis())/1000)+3600);
-		// TODO è”—¿‚ÌŒvZ®
+		// TODO æ‰‹æ•°æ–™ã®è¨ˆç®—å¼
 		fee = 50000;
 		signer = plugin.getConfig().getString("ServerPublicKey");
 		privateKey = plugin.getConfig().getString("ServerPrivateKey");
 	}
-	
+
 	public String getRequestPrepareAnnounce(String recipient, int amount) {
-		// ƒIƒuƒWƒFƒNƒg to JSON ‚É‚µ‚½‚¢
+		// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ to JSON ã«ã—ãŸã„
 		data = String.format("{\"transaction\":{\"timeStamp\":%s,\"amount\":%s,\"fee\":%s,\"recipient\":\"%s\",\"type\":257,\"deadline\":%s,\"message\":{\"payload\":\"\",\"type\":1},\"version\":-1744830463,\"signer\":\"%s\"},\"privateKey\":\"%s\"}",timeStamp, amount, fee, recipient, deadline, signer, privateKey);
 		return data;
 	}
-	
+
 }
