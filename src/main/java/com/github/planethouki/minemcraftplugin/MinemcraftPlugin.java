@@ -1,4 +1,4 @@
-package com.github.planethouki.plugin;
+package com.github.planethouki.minemcraftplugin;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,11 +8,21 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.github.planethouki.minemcraftplugin.command.MinemcraftCommand;
+import com.github.planethouki.minemcraftplugin.command.TestCommand;
+import com.github.planethouki.minemcraftplugin.crypto.Crypto;
+import com.github.planethouki.minemcraftplugin.listener.HarvestListener;
+import com.github.planethouki.minemcraftplugin.listener.LoginListener;
+import com.github.planethouki.minemcraftplugin.listener.MineListener;
+import com.github.planethouki.minemcraftplugin.notification.Notification;
+
 import io.nem.apps.builders.ConfigurationBuilder;
 
 public class MinemcraftPlugin extends JavaPlugin {
 
 	private FileConfiguration addressConfig;
+	private Crypto crypto;
+	private Notification notification;
 
 	public MinemcraftPlugin() {
 		super();
@@ -48,6 +58,11 @@ public class MinemcraftPlugin extends JavaPlugin {
 		// Listeners
 		new HarvestListener(this);
 		new MineListener(this);
+		new LoginListener(this);
+
+		// Instance
+		this.notification = new Notification();
+		this.crypto = new Crypto();
 
 		// Configurations
 		addressConfig = YamlConfiguration.loadConfiguration(new File(getDataFolder(), "address.yml"));
@@ -66,9 +81,17 @@ public class MinemcraftPlugin extends JavaPlugin {
 	}
 
 
+	// getter
 	public FileConfiguration getAddressConfig() {
 		return this.addressConfig;
 	}
+	public Crypto getCrypto() {
+		return this.crypto;
+	}
+	public Notification getNotification() {
+		return this.notification;
+	}
+
 
 	public void saveAddressConfig() {
 		try {

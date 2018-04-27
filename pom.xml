@@ -28,10 +28,12 @@
       <artifactId>bukkit</artifactId>
       <version>1.12.2-R0.1-SNAPSHOT</version>
     </dependency>
-    <dependency>
-    	<groupId>com.github.rosklyar</groupId>
-    	<artifactId>nem-library</artifactId>
-    	<version>1.1</version>
+	<dependency>
+	    <groupId>io.nem.apps</groupId>
+	    <artifactId>nem-apps-lib</artifactId>
+	    <version>0.0.1-SNAPSHOT</version>
+	    <scope>system</scope>
+	    <systemPath>${project.basedir}/../lib/nem-apps-lib-0.0.1-SNAPSHOT-jar-with-dependencies.jar</systemPath>
 	</dependency>
   </dependencies>
 </project>

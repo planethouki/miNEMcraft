@@ -1,4 +1,4 @@
-package com.github.planethouki.plugin;
+package com.github.planethouki.minemcraftplugin;
 
 import java.util.Calendar;
 import java.util.TimeZone;

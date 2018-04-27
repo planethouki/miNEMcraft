@@ -1,4 +1,4 @@
-package com.github.planethouki.plugin;
+package com.github.planethouki.minemcraftplugin;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

@@ -1,4 +1,4 @@
-package com.github.planethouki.plugin;
+package com.github.planethouki.minemcraftplugin.listener;
 
 import java.util.Calendar;
 import java.util.Collection;
@@ -12,44 +12,42 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class HarvestListener implements Listener {
+import com.github.planethouki.minemcraftplugin.MinemcraftPlugin;
+import com.github.planethouki.minemcraftplugin.MyHttpClient;
+
+public class MineListener implements Listener {
 	
 	private MinemcraftPlugin plugin;
 	
-	public HarvestListener(MinemcraftPlugin plugin) {
+	public MineListener(MinemcraftPlugin plugin) {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 		this.plugin = plugin;
 	}
 	
 	@EventHandler
-	public void	wheatBreak(BlockBreakEvent event) {
+	public void	mineBreak(BlockBreakEvent event) {
 		
-		// TODO POTATO
-		// TODO CARROT
-		// TODO BEETROOT
-		// TODO WATERMELON
-		// TODO PUMPKIN
-		// TODO COCOA
-		// TODO SUGAR CANE
-		// TODO NETHER WART
-		if (event.getBlock().getType() != Material.CROPS) {
+		//TODO IRON
+		//TODO GOLD
+		//TODO LAPIS LAZULI
+		//TODO REDSTONE
+		//TODO EMERALD
+		//TODO DIAMOND
+		
+		if (event.getBlock().getType() != Material.COAL_ORE) {
 			return;
 		}
 
-		Boolean isGrown = false;
+		int coalAmount = 0;
 		Collection<ItemStack> drop = event.getBlock().getDrops();
 		for (ItemStack stack: drop) {
-			if (stack.getType() == Material.WHEAT) {
-				isGrown = true;
+			if (stack.getType() == Material.COAL) {
+				coalAmount = stack.getAmount();
 			}
 		}
 		
-		if (!isGrown) {
-			return;
-		}
-		
-		Random harvestRoulette = new Random();
-		if (harvestRoulette.nextInt(9) != 0) {
+		Random miningRoulette = new Random();
+		if (miningRoulette.nextInt(10) >= coalAmount) {
 			return;
 		}
 
@@ -79,6 +77,6 @@ public class HarvestListener implements Listener {
 		plugin.getLogger().info(transactionData);
 		plugin.getLogger().info(MyHttpClient.executePost(transactionURL, transactionData));
 		
-		event.getPlayer().sendMessage("You Got Harvest! " + (Double.parseDouble(amount)/1000) + " XEM");
+		event.getPlayer().sendMessage("You Got Mining! " + (Double.parseDouble(amount)/1000) + " XEM");
 	}
 }

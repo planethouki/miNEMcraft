@@ -1,17 +1,23 @@
-package com.github.planethouki.plugin;
+package com.github.planethouki.minemcraftplugin.command;
 
 
 import java.util.Calendar;
 import java.util.TimeZone;
+import java.util.concurrent.ExecutionException;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
+import com.github.planethouki.minemcraftplugin.JsonStringBuilder;
+import com.github.planethouki.minemcraftplugin.MinemcraftPlugin;
+import com.github.planethouki.minemcraftplugin.MyHttpClient;
+import com.github.planethouki.minemcraftplugin.crypto.Crypto;
+
 public class TestCommand implements CommandExecutor {
-	
+
 	private MinemcraftPlugin plugin;
-	
+
 	public TestCommand(MinemcraftPlugin plugin) {
 		this.plugin = plugin;
 	}
@@ -21,15 +27,28 @@ public class TestCommand implements CommandExecutor {
 
 		if (args.length == 0) {
 			sender.sendMessage("few arg");
-			return false; 
+			return false;
 		}
-		
+
 		String url = "";
 		String data = "";
 		String recipient = "";
 		JsonStringBuilder jdBuilder;
-		
+
 		switch (args[0]) {
+		case "height":
+			String height = "";
+			try {
+				height = Crypto.getChainHeight();
+				plugin.getNotification().sayChainHeight(sender, height);
+			} catch (InterruptedException e) {
+				plugin.getNotification().sayError(sender);
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				plugin.getNotification().sayError(sender);
+				e.printStackTrace();
+			}
+			break;
 		case "heartbeat":
 		case "hb":
 			url = "http://127.0.0.1:7890/heartbeat";
@@ -94,7 +113,7 @@ public class TestCommand implements CommandExecutor {
 			Calendar nemEpoch = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
 			nemEpoch.set(2015, 2, 29, 0, 6, 25);
 			Calendar now = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-			
+
 			String timeStamp = Long.toString((now.getTimeInMillis() - nemEpoch.getTimeInMillis())/1000);
 			String amount = "50000";
 			String fee = "50000";
