@@ -8,6 +8,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import io.nem.apps.builders.ConfigurationBuilder;
+
 public class MinemcraftPlugin extends JavaPlugin {
 
 	private FileConfiguration addressConfig;
@@ -49,6 +51,13 @@ public class MinemcraftPlugin extends JavaPlugin {
 
 		// Configurations
 		addressConfig = YamlConfiguration.loadConfiguration(new File(getDataFolder(), "address.yml"));
+
+		// nem-apps-lib
+		ConfigurationBuilder.nodeNetworkName("defaultTestnet")
+		    .nodeNetworkProtocol("http")
+		    .nodeNetworkUri("bigalice2.nem.ninja")
+		    .nodeNetworkPort("7890")
+		    .setup();
 
 		// Others
 		getLogger().info("Plugin Enabled");
