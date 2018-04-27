@@ -1,4 +1,4 @@
-package com.planethouki.plugin;
+package com.github.planethouki.plugin;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

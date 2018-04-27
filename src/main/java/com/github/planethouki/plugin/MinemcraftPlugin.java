@@ -1,4 +1,4 @@
-package com.planethouki.plugin;
+package com.github.planethouki.plugin;
 
 import java.io.File;
 import java.io.IOException;

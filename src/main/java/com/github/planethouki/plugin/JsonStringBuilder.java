@@ -1,4 +1,4 @@
-package com.planethouki.plugin;
+package com.github.planethouki.plugin;
 
 import java.util.Calendar;
 import java.util.TimeZone;
