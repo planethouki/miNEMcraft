@@ -9,8 +9,6 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.planethouki.minemcraftplugin.command.MinemcraftCommand;
-import com.github.planethouki.minemcraftplugin.command.TestCommand;
-import com.github.planethouki.minemcraftplugin.crypto.Crypto;
 import com.github.planethouki.minemcraftplugin.listener.HarvestListener;
 import com.github.planethouki.minemcraftplugin.listener.LoginListener;
 import com.github.planethouki.minemcraftplugin.listener.MineListener;
@@ -21,7 +19,6 @@ import io.nem.apps.builders.ConfigurationBuilder;
 public class MinemcraftPlugin extends JavaPlugin {
 
 	private FileConfiguration addressConfig;
-	private Crypto crypto;
 	private Notification notification;
 
 	public MinemcraftPlugin() {
@@ -52,7 +49,6 @@ public class MinemcraftPlugin extends JavaPlugin {
 	public void onEnable() {
 
 		// Commands
-		getCommand("mncx").setExecutor(new TestCommand(this));
 		getCommand("mnc").setExecutor(new MinemcraftCommand(this));
 
 		// Listeners
@@ -62,7 +58,6 @@ public class MinemcraftPlugin extends JavaPlugin {
 
 		// Instance
 		this.notification = new Notification();
-		this.crypto = new Crypto();
 
 		// Configurations
 		addressConfig = YamlConfiguration.loadConfiguration(new File(getDataFolder(), "address.yml"));
@@ -84,9 +79,6 @@ public class MinemcraftPlugin extends JavaPlugin {
 	// getter
 	public FileConfiguration getAddressConfig() {
 		return this.addressConfig;
-	}
-	public Crypto getCrypto() {
-		return this.crypto;
 	}
 	public Notification getNotification() {
 		return this.notification;

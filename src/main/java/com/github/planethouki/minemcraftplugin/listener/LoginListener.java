@@ -17,12 +17,12 @@ public class LoginListener implements Listener {
 
 	@EventHandler
 	public void login(PlayerLoginEvent event) {
-		boolean hasAddress = plugin.getCrypto().hasAddress(event.getPlayer());
-		if ( !hasAddress ) {
-			String address = plugin.getCrypto().generateAddress(event.getPlayer());
-			plugin.getNotification().sayGeneratedAddress(event.getPlayer(), address);
-			plugin.getLogger().info(event.getPlayer().getDisplayName() + "'s address generated: " + address);
-		}
+//		boolean hasAddress = plugin.getCrypto().hasAddress(event.getPlayer());
+//		if ( !hasAddress ) {
+//			String address = plugin.getCrypto().generateAddress(event.getPlayer());
+//			plugin.getNotification().sayGeneratedAddress(event.getPlayer(), address);
+//			plugin.getLogger().info(event.getPlayer().getDisplayName() + "'s address generated: " + address);
+//		}
 	}
 
 }

@@ -4,10 +4,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import com.github.planethouki.minemcraftplugin.JsonStringBuilder;
 import com.github.planethouki.minemcraftplugin.MinemcraftPlugin;
-import com.github.planethouki.minemcraftplugin.MyHttpClient;
-import com.github.planethouki.minemcraftplugin.crypto.Crypto;
 
 public class MinemcraftCommand implements CommandExecutor {
 
