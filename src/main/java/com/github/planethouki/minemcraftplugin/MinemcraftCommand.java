@@ -75,7 +75,7 @@ public class MinemcraftCommand implements CommandExecutor {
 			final String publicKey = "3390BF02D2BB59C8722297FF998CE89183D0906E469873284C091A5CDC22FD57";
 			final Address address = Address.createFromRawAddress(rawaddress);
 			Bukkit.broadcastMessage(address.pretty());
-			accountHttp.getAccountInfo(address)
+			accountHttp.getAccountInfoJson(address)
 				.subscribe(x -> {
 					System.out.println(x.toString());
 				}, e -> {

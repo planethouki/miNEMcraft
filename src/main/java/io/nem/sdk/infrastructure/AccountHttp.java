@@ -74,6 +74,15 @@ public class AccountHttp extends Http implements AccountRepository {
                         )).collect(Collectors.toList())));
     }
 
+    public Observable<JsonObject> getAccountInfoJson(Address address) {
+        return this.client
+                .getAbs(this.url + address.plain())
+                .as(BodyCodec.jsonObject())
+                .rxSend()
+                .toObservable()
+                .map(Http::mapJsonObjectOrError);
+    }
+
     @Override
     public Observable<List<AccountInfo>> getAccountsInfo(List<Address> addresses) {
         JsonObject requestBody = new JsonObject();

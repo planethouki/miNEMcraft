@@ -90,7 +90,7 @@ public class Address {
      */
     public static Address createFromEncoded(String encodedAddress) {
         try {
-            return Address.createFromRawAddress(new String(new Base32().encode(Hex.decodeHex(encodedAddress))));
+            return Address.createFromRawAddress(new String(new Base32().encode(Hex.decodeHex(encodedAddress.toCharArray()))));
         } catch (DecoderException e) {
             throw new RuntimeException(e.getCause());
         }
@@ -111,7 +111,7 @@ public class Address {
         // step 1: sha3 hash of the public key
         byte[] publicKeyBytes;
         try {
-            publicKeyBytes = Hex.decodeHex(publicKey);
+            publicKeyBytes = Hex.decodeHex(publicKey.toCharArray());
         } catch (DecoderException e) {
             throw new RuntimeException("public key is not valid");
         }
