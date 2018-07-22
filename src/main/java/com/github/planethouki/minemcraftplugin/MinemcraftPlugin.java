@@ -8,13 +8,13 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.github.planethouki.minemcraftplugin.command.MinemcraftCommand;
 import com.github.planethouki.minemcraftplugin.listener.HarvestListener;
 import com.github.planethouki.minemcraftplugin.listener.LoginListener;
 import com.github.planethouki.minemcraftplugin.listener.MineListener;
 import com.github.planethouki.minemcraftplugin.notification.Notification;
 
-import io.nem.apps.builders.ConfigurationBuilder;
+
+
 
 public class MinemcraftPlugin extends JavaPlugin {
 
@@ -60,17 +60,12 @@ public class MinemcraftPlugin extends JavaPlugin {
 		this.notification = new Notification();
 
 		// Configurations
+		this.saveDefaultConfig();
 		addressConfig = YamlConfiguration.loadConfiguration(new File(getDataFolder(), "address.yml"));
-
-		// nem-apps-lib
-		ConfigurationBuilder.nodeNetworkName("defaultTestnet")
-		    .nodeNetworkProtocol("http")
-		    .nodeNetworkUri("bigalice2.nem.ninja")
-		    .nodeNetworkPort("7890")
-		    .setup();
 
 		// Others
 		getLogger().info("Plugin Enabled");
+
 
 		super.onEnable();
 	}

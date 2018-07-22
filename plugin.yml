@@ -1,9 +1,0 @@
-name: miNEMcraft
-version: 1.0.0
-main: com.planethouki.plugin.miNEMcraft
-author: planethouki
-commands:
-  nemc:
-    description: aaaaa
-    usage: /<command>
-    default: true

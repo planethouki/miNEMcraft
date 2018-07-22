@@ -1,6 +1,6 @@
 name: miNEMcraft
 version: 1.0.0
-main: com.github.planethouki.plugin.MinemcraftPlugin
+main: com.github.planethouki.minemcraftplugin.MinemcraftPlugin
 author: planethouki
 commands:
   mnc:
@@ -9,5 +9,3 @@ commands:
       - /<command> balance
       - /<command> register
     default: true
-  mncx:
-    description: test command
