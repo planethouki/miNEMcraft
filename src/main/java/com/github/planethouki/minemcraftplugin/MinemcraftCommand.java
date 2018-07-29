@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
@@ -99,7 +98,7 @@ public class MinemcraftCommand implements CommandExecutor {
 		                Deadline.create(2, java.time.temporal.ChronoUnit.HOURS),
 		                Address.createFromRawAddress(recipientAddress),
 		                Collections.singletonList(XEM.createRelative(BigInteger.valueOf(sendValue))),
-		                PlainMessage.create("Welcome To NEM"),
+		                PlainMessage.create("Send " + sendValue + " to " + args[1]),
 		                network
 		            );
 		        SignedTransaction signedTransaction = null;
