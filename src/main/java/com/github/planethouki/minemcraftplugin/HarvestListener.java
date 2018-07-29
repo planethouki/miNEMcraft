@@ -1,4 +1,4 @@
-package com.github.planethouki.minemcraftplugin.listener;
+package com.github.planethouki.minemcraftplugin;
 
 import java.util.Calendar;
 import java.util.Collection;
@@ -11,8 +11,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
-
-import com.github.planethouki.minemcraftplugin.MinemcraftPlugin;
 
 public class HarvestListener implements Listener {
 

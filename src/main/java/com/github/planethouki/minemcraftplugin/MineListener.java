@@ -1,10 +1,9 @@
-package com.github.planethouki.minemcraftplugin.listener;
+package com.github.planethouki.minemcraftplugin;
 
 import java.util.Random;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import com.github.planethouki.minemcraftplugin.MinemcraftPlugin;
 
 public class MineListener implements Listener {
 
