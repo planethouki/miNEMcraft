@@ -40,7 +40,7 @@
                 <filter>
                   <artifact>io.nem:sdk</artifact>
                   <excludes>
-                    <exclude>io/nem/**</exclude>
+                    <exclude>io/nem/sdk/**</exclude>
                   </excludes>
                 </filter>
                 <filter>
