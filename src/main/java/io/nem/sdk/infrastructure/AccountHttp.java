@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+// modified by planethouki at commit 62bcc71ffb1c8c46cf72befc42a149ed0858ddcc
+
 package io.nem.sdk.infrastructure;
 
 import com.fasterxml.jackson.core.type.TypeReference;
