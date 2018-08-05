@@ -6,11 +6,13 @@ import java.net.MalformedURLException;
 import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
+import org.bukkit.advancement.Advancement;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -74,6 +76,13 @@ public class MinemcraftCommand implements CommandExecutor {
 				sender.sendMessage("listener: " + listener.getUID());
 				sender.sendMessage("============================================");
 				break;
+			case "advance":
+				Iterator<Advancement> advancementIterator = plugin.getServer().advancementIterator();
+				while (advancementIterator.hasNext()) {
+					Advancement advancement = advancementIterator.next();
+					sender.sendMessage(advancement.getKey().getKey());
+				}
+				break;
 			case "send":
 				int sendValue = 10;
 				if (args.length == 2) {
@@ -84,12 +93,12 @@ public class MinemcraftCommand implements CommandExecutor {
 					sender.sendMessage("argment is wrong");
 					return false;
 				}
-				UUID recipientUUID = getPlayerUUIDByName(args[1]);
+				UUID recipientUUID = plugin.getPlayerUUIDByName(args[1]);
 				if (recipientUUID == null) {
 					sender.sendMessage("player " + args[1] + "'s uuid was not found.");
 					return true;
 				}
-				final String recipientAddress = getPlayerAddress(recipientUUID);
+				final String recipientAddress = plugin.getPlayerAddress(recipientUUID);
 				if (recipientAddress == null) {
 					sender.sendMessage("player " + args[1] + "'s address was not found.");
 					return true;
@@ -103,9 +112,9 @@ public class MinemcraftCommand implements CommandExecutor {
 		            );
 		        SignedTransaction signedTransaction = null;
 		        if (sender instanceof Player) {
-		        	signedTransaction = signByPlayer(transferTransaction, (Player)sender);
+		        	signedTransaction = plugin.signByPlayer(transferTransaction, (Player)sender);
 		        } else {
-		        	signedTransaction = signByServer(transferTransaction);
+		        	signedTransaction = plugin.signByServer(transferTransaction);
 		        }
 		        if (signedTransaction == null) {
 					sender.sendMessage("Couldn't sign transaction. Something wrong.");
@@ -116,63 +125,17 @@ public class MinemcraftCommand implements CommandExecutor {
 				try {
 			        final TransactionHttp transactionHttp = new TransactionHttp(host);
 			        transactionHttp.announce(signedTransaction).subscribe(x -> {
-//			        	System.out.println(x.getMessage());
+			        	System.out.println(x.getMessage());
 			        }, err -> {
 			        	err.printStackTrace();
 			        });
-//			        listener.open().get();
-//	        		listener.confirmed(Address.createFromRawAddress(recipientAddress)).subscribe(tx -> {
-//	        			sender.sendMessage(tx.toString());
-//	        			listener.close();
-//	        		}, err -> {
-//	        			err.printStackTrace();
-//	        		});
-			        class TransactionPredicate<Transaction> implements Predicate<Transaction> {
-			        	final String transactionHash;
-			        	public TransactionPredicate(String transactionHash) {
-			        		this.transactionHash = transactionHash;
-			        	}
-						@Override
-						public boolean test(Transaction t) throws Exception {
-							return transactionHash.equalsIgnoreCase(
-									((io.nem.sdk.model.transaction.Transaction) t).getTransactionInfo().get().getHash().get());
-						}
-			        }
-			        TransactionPredicate<Transaction> p = new TransactionPredicate<Transaction>(signedTransaction.getHash());
-			        class TransactionObserver<Transaction> extends DisposableObserver<Transaction> {
-			        	final CommandSender sender;
-			        	public TransactionObserver(CommandSender sender) {
-			        		this.sender = sender;
-			        	}
-						@Override public void onStart() {
-//							System.out.println("Start!");
-						}
-						@Override public void onNext(Transaction tx) {
-							sender.sendMessage("Transaction was confirmed.");
-							sender.sendMessage("Hash: " +
-									((io.nem.sdk.model.transaction.Transaction) tx).getTransactionInfo().get().getHash().get());
-							if (sender instanceof Player) {
-								((Player)sender).playSound(
-										((Player) sender).getLocation(),
-										Sound.ENTITY_PLAYER_LEVELUP,
-										0.75F,
-										0.5F);
-							}
-							this.dispose();
-						}
-						@Override public void onError(Throwable t) {
-							t.printStackTrace();
-						}
-						@Override public void onComplete() {
-//							System.out.println("Done!");
-						}
-			        }
-			        TransactionObserver<Transaction> d = new TransactionObserver<Transaction>(sender);
-
-	        		listener
-	        			.confirmed(Address.createFromRawAddress(recipientAddress))
-	        			.filter(p)
-	        			.subscribeWith(d);
+			        new TransactionListener(
+			        		plugin,
+			        		recipientAddress,
+			        		signedTransaction.getHash(),
+			        		sender)
+			        	.confirmed()
+			        	.status();
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
 				}
@@ -181,20 +144,20 @@ public class MinemcraftCommand implements CommandExecutor {
 				String rawAddress = null;
 				if (args.length == 1) {
 					if (sender instanceof Player) {
-						rawAddress = getPlayerAddress((Player)sender);
+						rawAddress = plugin.getPlayerAddress((Player)sender);
 					} else {
-						rawAddress = getServerAddress();
+						rawAddress = plugin.getServerAddress();
 					}
 				} else if (args.length == 2) {
 					if (args[1].equalsIgnoreCase("server")) {
-						rawAddress = getServerAddress();
+						rawAddress = plugin.getServerAddress();
 					} else {
-						UUID uuid = getPlayerUUIDByName(args[1]);
+						UUID uuid = plugin.getPlayerUUIDByName(args[1]);
 						if (uuid == null) {
 							sender.sendMessage("Cannnot find player. (uuid is null)");
 							return true;
 						}
-						rawAddress = getPlayerAddress(uuid);
+						rawAddress = plugin.getPlayerAddress(uuid);
 					}
 				} else {
 					return false;
@@ -237,36 +200,35 @@ public class MinemcraftCommand implements CommandExecutor {
 				byte bytes[] = new byte[32];
 				random.nextBytes(bytes);
 				String privateKey = HexEncoder.getString(bytes);
-				random.nextBytes(bytes);
-				String randomName = HexEncoder.getString(bytes);
+				String randomName = UUID.randomUUID().toString();
 				Account account = Account.createFromPrivateKey(privateKey, network);
 				Map<String, String> map = new HashMap<String, String>();
-				map.put("name", randomName.substring(0, 6));
+				map.put("name", "random_generated");
 				map.put("private", account.getPrivateKey());
 				map.put("public", account.getPublicKey());
 				map.put("address", account.getAddress().plain());
-				plugin.getAddressConfig().set(randomName.substring(6, 20), map);
+				plugin.getAddressConfig().set(randomName, map);
 				plugin.saveAddressConfig();
 				break;
 			case "address":
 				String rawAddress1 = null;
 				if (args.length == 1) {
 					if (sender instanceof Player) {
-						rawAddress1 = getPlayerAddress((Player)sender);
+						rawAddress1 = plugin.getPlayerAddress((Player)sender);
 
 					} else {
-						rawAddress1 = getServerAddress();
+						rawAddress1 = plugin.getServerAddress();
 					}
 				} else if (args.length == 2) {
 					if (args[1].equalsIgnoreCase("server")) {
-						rawAddress1 = getServerAddress();
+						rawAddress1 = plugin.getServerAddress();
 					} else {
-						UUID uuid = getPlayerUUIDByName(args[1]);
+						UUID uuid = plugin.getPlayerUUIDByName(args[1]);
 						if (uuid == null) {
 							sender.sendMessage("Cannnot find player. (uuid is null)");
 							return true;
 						}
-						rawAddress1 = getPlayerAddress(uuid);
+						rawAddress1 = plugin.getPlayerAddress(uuid);
 					}
 				} else {
 					return false;
@@ -284,52 +246,6 @@ public class MinemcraftCommand implements CommandExecutor {
 			}
 		}
 		return true;
-	}
-
-	private SignedTransaction signByPlayer(Transaction transaction, Player player) {
-		String uuid = player.getUniqueId().toString();
-		if (plugin.getAddressConfig().contains(uuid)) {
-			Account a = Account.createFromPrivateKey(plugin.getAddressConfig().getString(uuid + ".private"), network);
-			return a.sign(transaction);
-		}
-		return null;
-	}
-
-	private SignedTransaction signByServer(Transaction transaction) {
-		Account a = Account.createFromPrivateKey(plugin.getConfig().getString("profile.privateKey"), network);
-		return a.sign(transaction);
-	}
-
-
-	private String getPlayerAddress(Player player) {
-		return getPlayerAddress(player.getUniqueId());
-	}
-
-	private String getPlayerAddress(UUID uuid) {
-		if (plugin.getAddressConfig().contains(uuid.toString())) {
-			return plugin.getAddressConfig().getString(uuid + ".address");
-		}
-		return null;
-	}
-
-	private String getServerAddress() {
-		return Account
-		.createFromPrivateKey(plugin.getConfig().getString("profile.privateKey"), network)
-		.getAddress()
-		.plain();
-	}
-
-	private UUID getPlayerUUIDByName(String name) {
-		Player recepientPlayer = plugin.getServer().getPlayerExact(name);
-		if (recepientPlayer != null) {
-			return recepientPlayer.getUniqueId();
-		} else {
-			OfflinePlayer op = Bukkit.getOfflinePlayer(name);
-			if (op.hasPlayedBefore()) {
-			    return op.getUniqueId();
-			}
-		}
-		return null;
 	}
 
 }

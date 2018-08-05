@@ -5,24 +5,30 @@ A plugin for bukkit/spigot.
 
 
 ## TODO
-* ハーベスト 作物を収穫するとXEMがもらえる
-* マイニング 地下を掘るとXEMがもらえる
 * 秘密鍵ファイルの安全な取り扱い
 * ListenerのところのObservableの扱いがよくわかってない
 * トランザクションが失敗したときの処理
+
+## 特徴
+* ハーベスト 作物を収穫するとXEMがもらえる
+* マイニング 地下を掘るとXEMがもらえる
+* XEMを他プレイヤーに送れる
+* アカウントはサーバー側で管理
+* 進捗情報をブロックチェーンに書き込み
 
 
 ## コマンド
 * /mnc balance 残高を確認する
 * /mnc address アドレスを表示する
 * /mnc send &lt;player&gt; [amount] 送金する
+* /mnc reload 設定を再読み込み
 
 
 ## 環境
 * spigot 1.12.2
 * java 1.8.0_181
 
-## パッケージio.nem.～のソースについて
+## パッケージio.nem.sdk～のソースについて
 https://github.com/nemtech/nem2-sdk-java からコピーしています。
 
 nem2-sdk-javaの依存しているパッケージがspigotにある場合、そちらが優先されるようです。
