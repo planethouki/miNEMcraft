@@ -1,6 +1,8 @@
 package com.github.planethouki.minemcraftplugin;
 
+import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,39 +12,53 @@ import org.bukkit.event.player.PlayerLoginEvent;
 
 import io.nem.core.utils.HexEncoder;
 import io.nem.sdk.model.account.Account;
+import io.nem.sdk.model.account.Address;
 import io.nem.sdk.model.blockchain.NetworkType;
-
+import io.nem.sdk.model.mosaic.Mosaic;
+import io.nem.sdk.model.mosaic.MosaicId;
+import io.nem.sdk.model.mosaic.XEM;
+import io.nem.sdk.model.transaction.Deadline;
+import io.nem.sdk.model.transaction.PlainMessage;
+import io.nem.sdk.model.transaction.TransferTransaction;
 import io.reactivex.*;
 
 public class LoginListener implements Listener {
 
 	private MinemcraftPlugin plugin;
+	private MinemcraftHelper helper;
 
 	public LoginListener(MinemcraftPlugin plugin) {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 		this.plugin = plugin;
+		this.helper = plugin.getHelper();
 	}
 
 	@EventHandler
 	public void login(PlayerLoginEvent event) {
 		String playerUUID = event.getPlayer().getUniqueId().toString();
 		String playerName = event.getPlayer().getDisplayName();
-		if (plugin.getAddressConfig().contains(playerUUID)) {
+		byte[] playerSeed = playerUUID.replaceAll("-", "").getBytes();
+		byte[] privKeySeed = io.nem.core.crypto.Hashes.sha3_256(playerSeed);
+		Address recipient = Account.createFromPrivateKey(HexEncoder.getString(privKeySeed), helper.getNetwork()).getAddress();
 
-		} else {
-			SecureRandom random = new SecureRandom();
-			byte bytes[] = new byte[32];
-			random.nextBytes(bytes);
-			String privateKey = HexEncoder.getString(bytes);
-			Account account = Account.createFromPrivateKey(privateKey, NetworkType.MIJIN_TEST);
-			Map<String, String> map = new HashMap<String, String>();
-			map.put("name", playerName);
-			map.put("private", account.getPrivateKey());
-			map.put("public", account.getPublicKey());
-			map.put("address", account.getAddress().plain());
-			plugin.getAddressConfig().createSection(playerUUID, map);
-			plugin.saveAddressConfig();
-		}
+		Observable.just(
+			TransferTransaction.create(
+				Deadline.create(2, java.time.temporal.ChronoUnit.HOURS),
+				recipient,
+				Collections.singletonList(new Mosaic(new MosaicId("houkiserver:login"), BigInteger.valueOf(1))),
+				PlainMessage.create(playerName),
+				helper.getNetwork()
+			)
+		).map(
+			tx -> helper.signByServer(tx)
+		).subscribe(
+			signedTx -> {
+				plugin.getHelper().announce(signedTx).subscribe();
+				plugin.getLogger().info(signedTx.getHash());
+			}
+		);
+
+
 	}
 
 }

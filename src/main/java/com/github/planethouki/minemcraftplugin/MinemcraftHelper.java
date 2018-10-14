@@ -1,14 +1,51 @@
 package com.github.planethouki.minemcraftplugin;
 
+import java.net.MalformedURLException;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+
+import org.bukkit.entity.Player;
+
+import io.nem.sdk.infrastructure.AccountHttp;
+import io.nem.sdk.infrastructure.Listener;
+import io.nem.sdk.infrastructure.MosaicHttp;
+import io.nem.sdk.infrastructure.TransactionHttp;
+import io.nem.sdk.model.account.Account;
 import io.nem.sdk.model.blockchain.NetworkType;
+import io.nem.sdk.model.transaction.SignedTransaction;
+import io.nem.sdk.model.transaction.Transaction;
+import io.nem.sdk.model.transaction.TransactionAnnounceResponse;
+import io.reactivex.Observable;
 
 public class MinemcraftHelper {
 
-	MinemcraftHelper() {
+	private MinemcraftPlugin plugin;
+	private NetworkType network;
+	private String host;
+	private Listener listener;
 
+	private TransactionHttp txHttp;
+	private AccountHttp acHttp;
+	private MosaicHttp moHttp;
+
+	private Account srvAccount;
+
+	MinemcraftHelper(MinemcraftPlugin plugin) {
+		this.plugin = plugin;
+		this.network = string2NetworkType(plugin.getConfig().getString("profile.network"));
+		this.host = plugin.getConfig().getString("profile.host");
+		try {
+			this.listener = new Listener(this.host);
+			this.txHttp = new TransactionHttp(this.host);
+			this.acHttp = new AccountHttp(this.host);
+			this.moHttp = new MosaicHttp(this.host);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		srvAccount = Account.createFromPrivateKey(plugin.getConfig().getString("profile.privateKey"), network);
 	}
 
-	public static NetworkType getNetwork(String network) {
+	NetworkType string2NetworkType(String network) {
 		if (network.equalsIgnoreCase("MIJIN_TEST")) {
 			return NetworkType.MIJIN_TEST;
 		} else if (network.equalsIgnoreCase("MIJIN")) {
@@ -19,7 +56,6 @@ public class MinemcraftHelper {
 			return NetworkType.MAIN_NET;
 		}
 		throw new IllegalArgumentException("Unexpected Network. use MIJIN_TEST, MIJIN, TEST_NET, MAIN_NET");
-
 	}
 
 	public static String formatXEMrelative(String amountInt) {
@@ -35,5 +71,53 @@ public class MinemcraftHelper {
 					amountInt
 					;
 		}
+	}
+
+	CompletableFuture<Void> listenerOpen() {
+		return listener.open();
+	}
+
+	void listenerClose() {
+		listener.close();
+	}
+
+	String getServerAddress() {
+		return Account
+		.createFromPrivateKey(plugin.getConfig().getString("profile.privateKey"), network)
+		.getAddress()
+		.plain();
+	}
+
+	String getApostilleAddress() {
+		return plugin.getConfig().getString("profile.apostilleaddress");
+	}
+
+	String getPlayerAddress(Player player) {
+		return getPlayerAddress(player.getUniqueId());
+	}
+
+	String getPlayerAddress(UUID uuid) {
+		return plugin.getAddressConfig().getString(uuid + ".address");
+	}
+
+	SignedTransaction signByServer(Transaction transaction) {
+		return srvAccount.sign(transaction);
+	}
+
+	SignedTransaction signByPlayer(Transaction transaction, Player player) {
+		String uuid = player.getUniqueId().toString();
+		if (plugin.getAddressConfig().contains(uuid)) {
+			Account a = Account.createFromPrivateKey(plugin.getAddressConfig().getString(uuid + ".private"), network);
+			return a.sign(transaction);
+		}
+		return null;
+	}
+
+	public Observable<TransactionAnnounceResponse> announce(SignedTransaction signedTx) {
+		return this.txHttp.announce(signedTx);
+	}
+
+	NetworkType getNetwork() {
+		return network;
 	}
 }

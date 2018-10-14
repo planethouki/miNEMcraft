@@ -38,7 +38,7 @@ buildNumber.properties
 
 
 /.classpath
-/.project
 /.settings
 /.idea
 /miNEMcraft.iml
+/bin
