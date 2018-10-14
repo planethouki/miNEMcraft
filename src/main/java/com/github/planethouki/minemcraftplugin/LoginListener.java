@@ -45,7 +45,7 @@ public class LoginListener implements Listener {
 			TransferTransaction.create(
 				Deadline.create(2, java.time.temporal.ChronoUnit.HOURS),
 				recipient,
-				Collections.singletonList(new Mosaic(new MosaicId("houkiserver:login"), BigInteger.valueOf(1))),
+				Collections.singletonList(helper.getLoginMosaic(1)),
 				PlainMessage.create(playerName),
 				helper.getNetwork()
 			)

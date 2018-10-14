@@ -54,6 +54,7 @@ public class MinemcraftPlugin extends JavaPlugin {
 	public void onEnable() {
 		// Configurations
 		addressConfig = loadAddressConfig();
+		// TODO configuration validation
 
 		// properties
 		nemNetworkType = getConfig().getString("profile.network");

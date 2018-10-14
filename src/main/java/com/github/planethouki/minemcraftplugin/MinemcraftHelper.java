@@ -1,6 +1,8 @@
 package com.github.planethouki.minemcraftplugin;
 
+import java.math.BigInteger;
 import java.net.MalformedURLException;
+import java.util.Collections;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -12,6 +14,8 @@ import io.nem.sdk.infrastructure.MosaicHttp;
 import io.nem.sdk.infrastructure.TransactionHttp;
 import io.nem.sdk.model.account.Account;
 import io.nem.sdk.model.blockchain.NetworkType;
+import io.nem.sdk.model.mosaic.Mosaic;
+import io.nem.sdk.model.mosaic.MosaicId;
 import io.nem.sdk.model.transaction.SignedTransaction;
 import io.nem.sdk.model.transaction.Transaction;
 import io.nem.sdk.model.transaction.TransactionAnnounceResponse;
@@ -119,5 +123,10 @@ public class MinemcraftHelper {
 
 	NetworkType getNetwork() {
 		return network;
+	}
+
+	Mosaic getLoginMosaic(int amount) {
+		String name = plugin.getConfig().getString("mosaics.login");
+		return new Mosaic(new MosaicId(name), BigInteger.valueOf(amount));
 	}
 }
