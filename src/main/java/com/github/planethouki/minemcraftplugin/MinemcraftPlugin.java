@@ -68,7 +68,7 @@ public class MinemcraftPlugin extends JavaPlugin {
 		getCommand("mnc").setExecutor(new MinemcraftCommand(this));
 
 		// Listeners
-		new LoginListener(this);
+		new LoginoutListener(this);
 
 
 		getLogger().info("Server Address: " + helper.getServerAddress());

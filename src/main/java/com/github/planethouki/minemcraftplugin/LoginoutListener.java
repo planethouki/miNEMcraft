@@ -1,33 +1,23 @@
 package com.github.planethouki.minemcraftplugin;
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
-import io.nem.core.utils.HexEncoder;
-import io.nem.sdk.model.account.Account;
 import io.nem.sdk.model.account.Address;
-import io.nem.sdk.model.blockchain.NetworkType;
-import io.nem.sdk.model.mosaic.Mosaic;
-import io.nem.sdk.model.mosaic.MosaicId;
-import io.nem.sdk.model.mosaic.XEM;
 import io.nem.sdk.model.transaction.Deadline;
 import io.nem.sdk.model.transaction.PlainMessage;
 import io.nem.sdk.model.transaction.TransferTransaction;
 import io.reactivex.*;
 
-public class LoginListener implements Listener {
+public class LoginoutListener implements Listener {
 
 	private MinemcraftPlugin plugin;
 	private MinemcraftHelper helper;
 
-	public LoginListener(MinemcraftPlugin plugin) {
+	public LoginoutListener(MinemcraftPlugin plugin) {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 		this.plugin = plugin;
 		this.helper = plugin.getHelper();
@@ -37,9 +27,7 @@ public class LoginListener implements Listener {
 	public void login(PlayerLoginEvent event) {
 		String playerUUID = event.getPlayer().getUniqueId().toString();
 		String playerName = event.getPlayer().getDisplayName();
-		byte[] playerSeed = playerUUID.replaceAll("-", "").getBytes();
-		byte[] privKeySeed = io.nem.core.crypto.Hashes.sha3_256(playerSeed);
-		Address recipient = Account.createFromPrivateKey(HexEncoder.getString(privKeySeed), helper.getNetwork()).getAddress();
+		Address recipient = helper.getPlayerAddress(playerUUID);
 
 		Observable.just(
 			TransferTransaction.create(
@@ -57,8 +45,30 @@ public class LoginListener implements Listener {
 				plugin.getLogger().info(signedTx.getHash());
 			}
 		);
+	}
 
+	@EventHandler
+	public void logout(PlayerQuitEvent event) {
+		String playerUUID = event.getPlayer().getUniqueId().toString();
+		String playerName = event.getPlayer().getDisplayName();
+		Address recipient = helper.getPlayerAddress(playerUUID);
 
+		Observable.just(
+			TransferTransaction.create(
+				Deadline.create(2, java.time.temporal.ChronoUnit.HOURS),
+				recipient,
+				Collections.singletonList(helper.getLoginMosaic(1)),
+				PlainMessage.create(playerName),
+				helper.getNetwork()
+			)
+		).map(
+			tx -> helper.signByServer(tx)
+		).subscribe(
+			signedTx -> {
+				plugin.getHelper().announce(signedTx).subscribe();
+				plugin.getLogger().info(signedTx.getHash());
+			}
+		);
 	}
 
 }

@@ -5,3 +5,4 @@ profile:
   apostilleaddress: SDGSNCJ6EIFK43HG5W3JK3O7WI6JAR2ZMQSOVP7J
 mosaics:
   login: "houkiserver:login"
+  logout: "houkiserver:logout"

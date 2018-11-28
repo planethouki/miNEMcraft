@@ -8,11 +8,13 @@ import java.util.concurrent.CompletableFuture;
 
 import org.bukkit.entity.Player;
 
+import io.nem.core.utils.HexEncoder;
 import io.nem.sdk.infrastructure.AccountHttp;
 import io.nem.sdk.infrastructure.Listener;
 import io.nem.sdk.infrastructure.MosaicHttp;
 import io.nem.sdk.infrastructure.TransactionHttp;
 import io.nem.sdk.model.account.Account;
+import io.nem.sdk.model.account.Address;
 import io.nem.sdk.model.blockchain.NetworkType;
 import io.nem.sdk.model.mosaic.Mosaic;
 import io.nem.sdk.model.mosaic.MosaicId;
@@ -128,5 +130,16 @@ public class MinemcraftHelper {
 	Mosaic getLoginMosaic(int amount) {
 		String name = plugin.getConfig().getString("mosaics.login");
 		return new Mosaic(new MosaicId(name), BigInteger.valueOf(amount));
+	}
+
+	Mosaic getLogoutMosaic(int amount) {
+		String name = plugin.getConfig().getString("mosaics.logout");
+		return new Mosaic(new MosaicId(name), BigInteger.valueOf(amount));
+	}
+
+	public Address getPlayerAddress(String uuid) {
+		byte[] playerSeed = uuid.replaceAll("-", "").getBytes();
+		byte[] privKeySeed = io.nem.core.crypto.Hashes.sha3_256(playerSeed);
+		return Account.createFromPrivateKey(HexEncoder.getString(privKeySeed), this.getNetwork()).getAddress();
 	}
 }
